@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useFileHandler, useInputValidation } from "6pp";
+import { CameraAlt as CameraAltIcon } from "@mui/icons-material";
 import {
   Avatar,
   Button,
@@ -9,14 +10,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { CameraAlt as CameraAltIcon } from "@mui/icons-material";
+import axios from "axios";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 import { VisuallyHiddenInput } from "../components/styles/styledComponents";
-import { useFileHandler, useInputValidation } from "6pp";
+import { mahony, mostlyBlack } from "../constants/color";
+import { server } from "../constants/config";
+import { userExists } from "../redux/reducers/auth";
 import { usernameValidator } from "../utils/validators";
-import { bgGradient } from "../constants/color";
 
-function Login() {
+const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
+  //const [isLoading, setIsLoading] = useState(false);
 
   const toggleLogin = () => setIsLogin((prev) => !prev);
 
@@ -27,17 +33,69 @@ function Login() {
 
   const avatar = useFileHandler("single");
 
-  const handleLogin = (e) => {
+  const dispatch = useDispatch();
+
+  const handleLogin = async (e) => {
     e.preventDefault();
+
+    const config = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const { data } = await axios.post(
+        `${server}/api/v1/user/login`,
+        {
+          username: username.value,
+          password: password.value,
+        },
+        config
+      );
+
+      dispatch(userExists(true));
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
   };
-  const handleSignUp = (e) => {};
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+
+    formData.append("avatar", avatar.file);
+    formData.append("name", name.value);
+    formData.append("bio", bio.value);
+    formData.append("username", username.value);
+    formData.append("password", password.value);
+
+    const config = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    try {
+      const { data } = await axios.post(
+        `${server}/api/v1/user/new`,
+        formData,
+        config
+      );
+
+      dispatch(userExists(true));
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+  };
 
   return (
-    <div
-      style={{
-        backgroundImage: bgGradient,
-      }}
-    >
+    <div style={{ background: mahony }}>
       <Container
         component={"main"}
         maxWidth="xs"
@@ -55,11 +113,14 @@ function Login() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            backgroundColor: mostlyBlack,
           }}
         >
           {isLogin ? (
             <>
-              <Typography varient="h5">Login</Typography>
+              <Typography variant="h5" color={"whitesmoke"}>
+                LogIn
+              </Typography>
               <form
                 style={{
                   width: "100%",
@@ -72,19 +133,30 @@ function Login() {
                   fullWidth
                   label="Username"
                   margin="normal"
-                  varient="outlined"
+                  variant="outlined"
                   value={username.value}
                   onChange={username.changeHandler}
+                  sx={{
+                    "& input": {
+                      color: "whitesmoke",
+                    },
+                  }}
                 />
+
                 <TextField
                   required
                   fullWidth
                   label="Password"
                   type="password"
                   margin="normal"
-                  varient="outlined"
+                  variant="outlined"
                   value={password.value}
                   onChange={password.changeHandler}
+                  sx={{
+                    "& input": {
+                      color: "whitesmoke",
+                    },
+                  }}
                 />
 
                 <Button
@@ -93,23 +165,28 @@ function Login() {
                   variant="contained"
                   color="primary"
                   type="submit"
-                  onClick={toggleLogin}
                 >
                   Login
                 </Button>
 
-                <Typography textAlign={"center"} m={"1rem"}>
+                <Typography
+                  textAlign={"center"}
+                  m={"1rem"}
+                  color={"whitesmoke"}
+                >
                   OR
                 </Typography>
 
-                <Button fullWidth variant="Text" onClick={toggleLogin}>
+                <Button fullWidth variant="text" onClick={toggleLogin}>
                   Sign Up
                 </Button>
               </form>
             </>
           ) : (
             <>
-              <Typography varient="h5">Sign Up</Typography>
+              <Typography variant="h5" color={"whitesmoke"}>
+                Sign Up
+              </Typography>
               <form
                 style={{
                   width: "100%",
@@ -156,7 +233,7 @@ function Login() {
                     width={"fit-content"}
                     display={"block"}
                     color="error"
-                    varient="caption"
+                    variant="caption"
                   >
                     {avatar.error}
                   </Typography>
@@ -167,31 +244,46 @@ function Login() {
                   fullWidth
                   label="Name"
                   margin="normal"
-                  varient="outlined"
+                  variant="outlined"
                   value={name.value}
                   onChange={name.changeHandler}
+                  sx={{
+                    "& input": {
+                      color: "whitesmoke",
+                    },
+                  }}
                 />
                 <TextField
                   required
                   fullWidth
                   label="Bio"
                   margin="normal"
-                  varient="outlined"
+                  variant="outlined"
                   value={bio.value}
                   onChange={bio.changeHandler}
+                  sx={{
+                    "& input": {
+                      color: "whitesmoke",
+                    },
+                  }}
                 />
                 <TextField
                   required
                   fullWidth
                   label="Username"
                   margin="normal"
-                  varient="outlined"
+                  variant="outlined"
                   value={username.value}
                   onChange={username.changeHandler}
+                  sx={{
+                    "& input": {
+                      color: "whitesmoke",
+                    },
+                  }}
                 />
 
                 {username.error && (
-                  <Typography color="error" varient="caption">
+                  <Typography color="error" variant="caption">
                     {username.error}
                   </Typography>
                 )}
@@ -202,9 +294,14 @@ function Login() {
                   label="Password"
                   type="password"
                   margin="normal"
-                  varient="outlined"
+                  variant="outlined"
                   value={password.value}
                   onChange={password.changeHandler}
+                  sx={{
+                    "& input": {
+                      color: "whitesmoke",
+                    },
+                  }}
                 />
 
                 <Button
@@ -213,14 +310,17 @@ function Login() {
                   variant="contained"
                   color="primary"
                   type="submit"
-                  onClick={toggleLogin}
                 >
                   Sign Up
                 </Button>
-                <Typography textAlign={"center"} m={"1rem"}>
+                <Typography
+                  textAlign={"center"}
+                  m={"1rem"}
+                  color={"whitesmoke"}
+                >
                   OR
                 </Typography>
-                <Button fullWidth variant="Text" onClick={toggleLogin}>
+                <Button fullWidth variant="text" onClick={toggleLogin}>
                   Login
                 </Button>
               </form>
@@ -230,6 +330,6 @@ function Login() {
       </Container>
     </div>
   );
-}
+};
 
 export default Login;
