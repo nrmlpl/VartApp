@@ -11,16 +11,22 @@ const errorMiddleware = (err, req, res, next) => {
         err.statusCode = 400;
     }
 
-    if(err.name === "CastError") {
+    if (err.name === "CastError") {
         const errorPath = err.path;
         err.message = `Invalid Format of ${errorPath}`;
         err.statusCode = 400;
     }
 
-    return res.status(err.statusCode).json({
+    const response = {
         success: false,
-        message: envMode === "DEVELOPMENT" ? err : err.message,
-    });
+        message: err.message,
+    }
+
+    if (envMode === "DEVELOPMENT") {
+        response.error = err;
+    }
+
+    return res.status(err.statusCode).json(response);
 
 };
 

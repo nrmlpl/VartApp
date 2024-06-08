@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
-import jwt from "jsonwebtoken";
-import { v4 as uuid } from "uuid";
 import { v2 as cloudinary } from "cloudinary";
-import { getBase64 } from "../lib/helper.js";
+import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
+import { v4 as uuid } from "uuid";
+import { getBase64, getSockets } from "../lib/helper.js";
 
 
 const cookieOptions = {
@@ -27,12 +27,15 @@ const sendToken = (res, user, code, message) => {
 
     return res.status(code).cookie("Vartapp-token", token, cookieOptions).json({
         success: true,
+        user,
         message,
     });
 };
 
 const emitEvent = (req, event, users, data) => {
-    console.log("emit event", event);
+    const io = req.app.get("io");
+    const usersSocket = getSockets(users);
+    io.to(usersSocket).emit(event, data);
 };
 
 const uploadFilesToCloudinary = async (files = []) => {
@@ -47,21 +50,21 @@ const uploadFilesToCloudinary = async (files = []) => {
                 (error, result) => {
                     if (error) return reject(error);
                     resolve(result);
-                });
+                }
+            );
         });
     });
 
     try {
         const results = await Promise.all(uploadPromises);
 
-        const formattedReults = results.map((result) => ({
+        const formattedResults = results.map((result) => ({
             public_id: result.public_id,
             url: result.secure_url,
         }));
-
-        return formattedReults;
-    } catch (error) {
-        throw new Error("Error uploading files from cloudinary", error);
+        return formattedResults;
+    } catch (err) {
+        throw new Error("Error uploading files to cloudinary", err);
     }
 };
 
@@ -70,10 +73,5 @@ const deleteFilesFromCloudinary = async (public_id) => {
 };
 
 export {
-    connectDB,
-    sendToken,
-    cookieOptions,
-    emitEvent,
-    deleteFilesFromCloudinary,
-    uploadFilesToCloudinary
+    connectDB, cookieOptions, deleteFilesFromCloudinary, emitEvent, sendToken, uploadFilesToCloudinary
 };

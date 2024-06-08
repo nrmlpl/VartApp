@@ -4,6 +4,7 @@ import React, { memo } from "react";
 import { bisque, lightGray, mahony, matteBlack } from "../../constants/color";
 import { fileFormat } from "../../lib/features";
 import RenderAttachment from "./RenderAttachment";
+import { motion } from "framer-motion";
 
 const MessageComponent = ({ message, user }) => {
   const { sender, content, attachments = [], createdAt } = message;
@@ -13,7 +14,9 @@ const MessageComponent = ({ message, user }) => {
   const timeAgo = moment(createdAt).fromNow();
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, x: "-100%" }}
+      whileInView={{ opacity: 1, x: 0 }}
       style={{
         alignSelf: sameSender ? "flex-end" : "flex-start",
         backgroundColor: sameSender ? mahony : matteBlack,
@@ -54,7 +57,7 @@ const MessageComponent = ({ message, user }) => {
       <Typography variant="caption" color={bisque}>
         {timeAgo}
       </Typography>
-    </div>
+    </motion.div>
   );
 };
 

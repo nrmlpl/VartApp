@@ -42,18 +42,23 @@ app.put("/removemember", removeMemberValidator(), validateHandler, removeMember)
 
 app.delete("/leave/:id", chatIdValidator(), validateHandler, leaveGroup);
 
-// send Attachment
-app.post("/message", attachmentsMulter, sendAttachmentsValidator(), validateHandler, sendAttachments);
+app.post(
+    "/message",
+    attachmentsMulter,
+    sendAttachmentsValidator(),
+    validateHandler,
+    sendAttachments
+);
 
 // Get messages
-app.get("/message/:id", chatIdValidator(), validateHandler ,getMessages);
+app.get("/message/:id", chatIdValidator(), validateHandler, getMessages);
 
 
 // Get Chat details, rename, delete
 app.route("/:id")
-.get(chatIdValidator(), validateHandler, getChatDetails)
-.put(renameValidator(), validateHandler, renameGroup)
-.delete(chatIdValidator(), validateHandler, deleteChat);
+    .get(chatIdValidator(), validateHandler, getChatDetails)
+    .put(renameValidator(), validateHandler, renameGroup)
+    .delete(chatIdValidator(), validateHandler, deleteChat);
 
 export default app;
 

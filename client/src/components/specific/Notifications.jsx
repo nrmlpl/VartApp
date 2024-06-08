@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { memo } from "react";
-import { useErrors } from "../../hooks/hook";
+import { useAsyncMutation, useErrors } from "../../hooks/hook";
 import {
   useAcceptFriendRequestMutation,
   useGetNotificationsQuery,
@@ -24,22 +24,12 @@ const Notifications = () => {
 
   const { isLoading, data, isError, error } = useGetNotificationsQuery();
 
-  const [acceptRequest] = useAcceptFriendRequestMutation();
+  const [acceptRequest] = useAsyncMutation(useAcceptFriendRequestMutation);
 
   const friendRequestHandler = async ({ _id, accept }) => {
-    
     dispatch(setIsNotification(false));
 
-    try {
-      const res = await acceptRequest({ requestId: _id, accept });
-      if (res.data?.Avatar) {
-        console.log("Use Socket Here!");
-        toast.success(res.data?.message);
-      } else toast.error(res.data?.error || "Something went wrong");
-    } catch (error) {
-      toast.error("Something went wrong");
-      console.log(error);
-    }
+    await acceptRequest("Accepting...", {requestId: _id, accept });
   };
 
   const closeHandler = () => dispatch(setIsNotification(false));

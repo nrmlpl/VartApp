@@ -1,13 +1,13 @@
 import {
-    ArcElement,
-    CategoryScale,
-    Chart as ChartjJS,
-    Filler,
-    Legend,
-    LineElement,
-    LinearScale,
-    PointElement,
-    Tooltip,
+  ArcElement,
+  CategoryScale,
+  Chart as ChartjJS,
+  Filler,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  Tooltip,
 } from "chart.js";
 import React from "react";
 import { Doughnut, Line } from "react-chartjs-2";
@@ -58,7 +58,7 @@ const LineChart = ({value = []}) => {
     datasets: [
       {
         data: value,
-        label: "Revenue",
+        label: "Messages",
         fill: false,
         backgroundColor: lightViolet,
         borderColor: violet,

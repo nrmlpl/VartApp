@@ -22,7 +22,6 @@ const ChatList = ({
       sx={{
         overflow: "auto",
         height: "91vh",
-        /* Custom scrollbar styles */
         "&::-webkit-scrollbar": {
           width: "4px",
         },
@@ -42,7 +41,7 @@ const ChatList = ({
           ({ chatId }) => chatId === _id
         );
 
-        const isOnline = members?.some((member) => onlineUsers.includes(_id));
+        const isOnline = members?.some((member) => onlineUsers.includes(member));
 
         return (
           <ChatItem

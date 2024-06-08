@@ -66,10 +66,10 @@ const sendRequestValidator = () => [
 const acceptRequestValidator = () => [
     body("requestId", "Please Enter Request Id").notEmpty(),
     body("accept", "Please Add Accept")
-    .notEmpty()
-    .withMessage("Please Add Accept")
-    .isBoolean()
-    .withMessage("Accept must be a boolean"),
+        .notEmpty()
+        .withMessage("Please Add Accept")
+        .isBoolean()
+        .withMessage("Accept must be a boolean"),
 ];
 
 const adminLoginValidator = () => [
@@ -78,6 +78,16 @@ const adminLoginValidator = () => [
 
 
 export {
-    acceptRequestValidator, addMemberValidator, adminLoginValidator, chatIdValidator, loginValidator,
-    newGroupValidator, registerValidator, removeMemberValidator, renameValidator, sendAttachmentsValidator, sendRequestValidator, validateHandler
+    acceptRequestValidator,
+    addMemberValidator,
+    adminLoginValidator,
+    chatIdValidator,
+    loginValidator,
+    newGroupValidator,
+    registerValidator,
+    removeMemberValidator,
+    renameValidator,
+    sendAttachmentsValidator,
+    sendRequestValidator,
+    validateHandler
 };
