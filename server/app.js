@@ -36,7 +36,7 @@ dotenv.config({
 const mongoURI = process.env.MONGO_URI;
 const port = process.env.PORT || 3000;
 const envMode = process.env.NODE_ENV.trim() || "PRODUCTION";
-const adminSecretKey = process.env.ADMIN_SECRET_KEY || "koregajiyuda";
+const adminSecretKey = process.env.ADMIN_SECRET_KEY || "kaliyug";
 const userSocketIDs = new Map();
 const onlineUsers = new Set();
 

@@ -1,5 +1,3 @@
-
-
 const corsOptions = {
     origin: [
         "http://localhost:5173",
@@ -10,7 +8,6 @@ const corsOptions = {
     credentials: true,
 };
 
-
-const VARTAPP_TOKEN = "Vartapp-token"
+const VARTAPP_TOKEN = "Vartapp-token";
 
 export { corsOptions, VARTAPP_TOKEN };

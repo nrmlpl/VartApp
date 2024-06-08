@@ -9,7 +9,7 @@ import { ErrorHandler } from "../utils/utility.js";
 import { getOtherMember } from "../lib/helper.js";
 
 const newUser = TryCatch(async (req, res, next) => {
-
+    console.log('I am connected to');
     const { name, username, password, bio } = req.body;
 
     const file = req.file;
